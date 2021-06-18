@@ -27,8 +27,15 @@ class MyHello extends React.Component {
 
   async show() {
     const show = await todo_app.getTodos();
-    console.log(show);
-    this.setState({ ...this.state, list: show });
+    // console.log(show);
+    const sortedList = this.sortById(show);
+    this.setState({ ...this.state, list: sortedList });
+  }
+
+  sortById(list){
+    const sortedList = list.sort((a, b) => a.id > b.id ? 1 : -1);
+    console.log(sortedList);
+    return sortedList;
   }
 
   async handleRemove(e){
@@ -38,13 +45,16 @@ class MyHello extends React.Component {
     this.show()
   }
 
-  handleToggleCompleted(e){
-    // console.log("toggle comlpetion", e);
-    const bigInt = BigInt(e);
-    await todo_app.changeCompletion(bigInt);
-    
+  async changeCompleteness(e){
+    const bigInt = BigInt(e.id);
+    await todo_app.toggleCompleteness(bigInt, e.description, e.completed);
   }
 
+  async handleToggleCompleted(e){
+    // console.log("toggle comlpetion", e);
+    this.changeCompleteness(e).then(() => this.show());
+    
+  }
 
   handleChange(event) {    
     this.setState({...this.state, newDescription: event.target.value});  
@@ -57,30 +67,24 @@ class MyHello extends React.Component {
   async handleSubmit(event) {
     if(this.state.newDescription != ''){
       this.addItem().then(() => this.show()).then(this.setState({...this.state, newDescription: ''}));
-      
-      
     }else{
       alert('Enter description to add item.');
     }
     event.preventDefault();
   }
-  // ComponentDidMount(){
-  //   this.show();
-  // }
-
 
   render() {
     const toDoList = this.state.list.map(el => { // el.completed is boolean
       return el.completed == true ?   
       <div>
         <div key={Number(el.id)} id={Number(el.id)}> {el.description};  </div>
-        <button className={'button-completed'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el.id)}>completed</button>
+        <button className={'button-completed'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el)}>Completed</button>
         <button className={''} id={Number(el.id)} onClick={() => this.handleRemove(el.id)}>remove</button>
       </div>
       :
       <div>
         <div key={Number(el.id)} id={Number(el.id)}> {el.description};  </div>
-        <button className={'button-incomplete'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el.id)}>Incomplete</button>
+        <button className={'button-incomplete'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el)}>Incomplete</button>
         <button className={''} id={Number(el.id)} onClick={() => this.handleRemove(el.id)}>remove</button>
       </div>
 

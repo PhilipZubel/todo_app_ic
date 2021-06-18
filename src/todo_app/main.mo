@@ -15,14 +15,15 @@ actor Assistant {
   };
 
   // Add to-do item utility
-  func add(todos : [ToDo], description : Text, id : Nat) : [ToDo] {
+  func add(todos : [ToDo], description : Text, id : Nat, completed: Bool) : [ToDo] {
     let todo : ToDo = {
       id = id;
       description = description;
-      completed = false;
+      completed = completed;
     };
     Array.append(todos, [todo])
 };
+
 
   // func remove(todos : [ToDo], id : Nat) : [ToDo]{
   //   // https://forum.dfinity.org/t/motoko-syntax-is-very-stange/1695
@@ -42,7 +43,7 @@ actor Assistant {
   
 
   public func addTodo (description : Text) : async () {
-    todos := add(todos, description, nextId);
+    todos := add(todos, description, nextId, false);
     nextId += 1;
   };
 
@@ -51,11 +52,22 @@ actor Assistant {
     todos := Array.filter(todos, func(val: ToDo) : Bool { id !=  val.id });
   };
 
-  public func toggleCompleteness (id: Nat): async(){
+  public func toggleCompleteness (id: Nat, description: Text, completed: Bool): async(){
     // toggle completeness of item with the given id
     // https://sdk.dfinity.org/docs/base-libraries/array
-    var todo : ToDo = Array.find(todos, func(val: ToDo) : Bool { id != val.id});
-    todo.completed := !todo.completed;
+    // var todo : ToDo = Array.find(todos, func(val: ToDo) : Bool { id == val.id});
+    // if(todo.completed){
+    //   todo.completed := false;
+    // }else{
+    //   todo.completed := true;
+    // };
+    todos := Array.filter(todos, func(val: ToDo) : Bool { id !=  val.id });
+    if(completed){
+      todos := add(todos, description, id, false);
+    }else{
+      todos := add(todos, description, id, true);
+    };
+    
   };
 
   public query func showTodos () : async Text {
