@@ -1,6 +1,7 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { idlFactory as todo_app_idl, canisterId as todo_app_id } from 'dfx-generated/todo_app';
 
+
 const agent = new HttpAgent();
 const todo_app = Actor.createActor(todo_app_idl, { agent, canisterId: todo_app_id });
 
@@ -9,6 +10,7 @@ const todo_app = Actor.createActor(todo_app_idl, { agent, canisterId: todo_app_i
 import * as React from 'react';
 import { render } from 'react-dom';
 import '../assets/style.css'; // Import custom styles
+import 'bootstrap/dist/css/bootstrap.css';
 
 // Replace the default index.js content with
 // React JavaScript
@@ -34,7 +36,7 @@ class MyHello extends React.Component {
 
   sortById(list){
     const sortedList = list.sort((a, b) => a.id > b.id ? 1 : -1);
-    console.log(sortedList);
+    // console.log(sortedList);
     return sortedList;
   }
 
@@ -77,34 +79,72 @@ class MyHello extends React.Component {
     const toDoList = this.state.list.map(el => { // el.completed is boolean
       return el.completed == true ?   
       <div>
-        <div key={Number(el.id)} id={Number(el.id)}> {el.description};  </div>
-        <button className={'button-completed'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el)}>Completed</button>
-        <button className={''} id={Number(el.id)} onClick={() => this.handleRemove(el.id)}>remove</button>
+        <div class="my-3 row justify-content-center" key={Number(el.id)} id={Number(el.id)}> 
+          <div class="col-6 mt-1">{el.description} </div>
+          <div class="col-3">
+          <button className={'btn btn-success btn-round'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el)}>Item Completed</button>
+          </div>
+          <div class="col-3">
+          <button className={'btn btn-secondary btn-round'} id={Number(el.id)} onClick={() => this.handleRemove(el.id)}>Remove Item</button>
+          </div>
+        </div>
       </div>
       :
       <div>
-        <div key={Number(el.id)} id={Number(el.id)}> {el.description};  </div>
-        <button className={'button-incomplete'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el)}>Incomplete</button>
-        <button className={''} id={Number(el.id)} onClick={() => this.handleRemove(el.id)}>remove</button>
+        <div class="my-3 row justify-content-center" key={Number(el.id)} id={Number(el.id)}> 
+          <div class="col-6 mt-1">{el.description} </div>
+          <div class="col-3">
+          <button className={'btn btn-warning btn-round'} id={Number(el.id)} onClick={() => this.handleToggleCompleted(el)}>Item Incomplete</button>
+          </div>
+          <div class="col-3">
+          <button className={'btn btn-secondary btn-round'} id={Number(el.id)} onClick={() => this.handleRemove(el.id)}>Remove Item</button>
+          </div>
+        </div>
       </div>
+
+
+
+    //   <div class="row justify-content-center">
+    // <div class="col-4">
+    //   One of two columns
+    // </div>
+    // <div class="col-4">
+    //   One of two columns
+    // </div>
 
     });
 
 
     return (
-      <div style={{ "font-size": "30px" }}>
-        <form onSubmit={this.handleSubmit}>       
-         <label>
-          Description:
-          <input type="text" value={this.state.newDescription} onChange={this.handleChange} />       
-         </label>
-        <input type="submit" value="Submit" />
-      </form>
-      <div>
-        <div>Your completed tasks:</div>
-        <div>{toDoList}</div>
+      <div className={'container'}>
+        <div class="card text-center">
+          <div class="card-header mt-4 mb-2">
+            <h1>To Do list:</h1>
+          </div>
+          <div class="card-body new-item-section pt-2">
+            <div class="row justify-content-md-center">
+              <div class="col-auto">
+                <h4 class="card-title mt-3">Add new item:</h4>
+              </div>
+              <div class="col-auto">
+                <form class="row g align-items-center mt-2" onSubmit={this.handleSubmit}>  
+                <div class="col-auto">
+                  <input type="text" class="form-control" value={this.state.newDescription} onChange={this.handleChange} />         
+                </div>     
+                <div class="col-auto">
+                  <input type="submit" class="btn btn-primary" value="Submit" />
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer sm-container">
+            <div> <b>Your tasks:</b></div>
+            <div>{toDoList}</div>        
+          </div>
+        </div>
         
-      </div>
+      
       </div>
 
     );

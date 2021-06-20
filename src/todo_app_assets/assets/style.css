@@ -1,7 +1,22 @@
-.button-completed{
-    background-color: greenyellow;
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+
+.container {
+    margin-top:5%;
+    padding-bottom:5%;
+    height:80%;
+    font-size: 32px;
+    font-family: 'Ubuntu', sans-serif;
 }
 
-.button-incomplete{
-    background-color: lightcoral;
+.sm-container{
+    height: 75%;
+    font-size: 30px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.btn-round {
+    border-radius: 3px;
+    font-size: 120%;
+    size: 120%;
 }
